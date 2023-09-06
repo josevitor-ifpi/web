@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDB X CDC</title>
+
+    <style>
+
+    body{
+      font-family: 'Montserrat','Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', 'sans-serif';
+
+      background: #0F2027;
+
+      color: white;
+    }
+
+    h1{
+      /* border: 2px solid greenyellow; */
+      padding: 10px;
+      font-size: 1.5rem;
+    }
+
+    div{
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.6rem;
+    }
+
+    #botoes{
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    #botoes input{
+      min-width: 300px;
+      flex: 1;
+      height: 50px;
+      border-radius: 10px;
+      font-size: 1.9rem;
+    }
+
+    #botoes input:hover{
+      background-color: cadetblue;
+      font-size: 2rem;
+    }
+
+    header{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    input{
+      background-color: #0F2027;
+      color: white;
+      border-bottom: 1px solid greenyellow;
+      border-right: 1px solid greenyellow;
+      font-size: 1.2rem;
+    }
+
+    label{
+      color: cadetblue;
+      /* background-color: blanchedalmond; */
+    }
+    </style>
+</head>
+<body>
+
+    <header>
+
+        <h1>Simulador de CDB e CDC</h1>
+    </header>
+
+    <form id="formulario" action="#">
+
+        <div>
+            <label for="">Valor Investido no CDB(R$)</label>
+            <input id="cx_investimento_cdb" type="number" placeholder="Investimento CDB">
+        </div>
+
+        <div>
+            <label for="">Taxa CDB</label>
+            <input id="cx_taxa_cdb" type="number" step="0.01" placeholder="Taxa CDB (%)">
+        </div>
+
+        <div>
+            <label for="">Ano de Vencimento</label>
+            <input id="cx_vencimento_cdb" type="number" placeholder="Vencimento">
+        </div>
+
+        <div>
+          <label for="">Taxa CDC</label>
+          <input id="cx_taxa_cdc" type="number" step="0.01" placeholder="Taxa do CDC (entre 1% a 17%)">
+      </div>
+
+        <div id="botoes">
+          <input id="btn-calcular" onclick="clique_botao_calcular()" type="submit" value="Calcular">
+            <input type="reset" value="Limpar">
+        </div>
+
+    </form>
+
+    <h2>----- RESULTADO DA SIMULAÇÂO -----</h2>
+        <p id="resultado"></p>
+
+    <script>
+        function clique_botao_calcular(){
+            const cx_investimento_cdb = document.getElementById('cx_investimento_cdb')
+            const cx_taxa_cdb = document.getElementById('cx_taxa_cdb')
+            const cx_vencimento_cdb = document.getElementById('cx_vencimento_cdb')
+
+            const investimento = Number(cx_investimento_cdb.value)
+            const taxa_cdb = Number(cx_taxa_cdb.value)
+            const ano_vencimento = Number(cx_vencimento_cdb.value)
+
+            const tempo_ano = calcular_tempo_investimento(ano_vencimento) // Tempo = ano do saque - 2023
+            const rendimento_cdb = calcular_juros_cdb(investimento, taxa_cdb, tempo_ano) // J = M - C ; M = C * (1 + i) ** t
+
+            const valor_total_a_sacar = investimento + rendimento_cdb
+            const percentual_de_ganho = taxa_cdb * tempo_ano
+
+            const resultado = `***** RESULTADO *****
+            >> Valor Investido: R$ ${valor_investido.toFixed(2)}
+            >> Rendimento     : R$ ${rendimento_cdb.toFixed(2)}
+            >> Total a Sacar  : R$ ${valor_total_a_sacar.toFixed(2)}
+            >> Rendimento (%) : ${percentual_de_ganho.toFixed(1)}%`
+
+            const elemento_resultado = document.getElementById('resultado')
+            elemento_resultado.innerText = resultado
+
+
+            function calcular_tempo_investimento(ano){
+                const tempo = ano - 2023
+                return tempo
+            }
+
+            function calcular_juros_cdb(investimento, taxa_cdb, tempo_ano){
+                return juros_compostos(investimento, taxa_cdb, tempo_ano)
+            }
+
+            function juros_compostos(c, i, t){
+                const juros = c *(1 + (i/100)) ** t
+                return juros
+            }
+
+            // alert(resultado)
+        }
+            </script>
+        </body>
+        </html>
